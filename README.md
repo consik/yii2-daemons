@@ -201,6 +201,7 @@ Defining your daemon config params:
 			];
 		}
 	```
+	
 2) Common services configuration. Override basic service configuration. Var ServiceController::$commonServiceConfig.
 
 	It can be changed in your controller configuration. Yii2 console config file:
