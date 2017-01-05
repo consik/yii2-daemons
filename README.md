@@ -152,61 +152,68 @@ ParamName=ParamValue
 See available options in [official docs](http://0pointer.de/public/systemd-man/systemd.service.html)
 
 All of them below sorted by priority:
+
 1) Daemons service configuration. Override common services configuration.
+
 It will be used if the daemon implements ServiceConfigInterface. ServiceController calls ```getServiceConfig()``` method for getting configuration.
 Example setting systemd unit params for each daemon
-	1) Implement ServiceConfigInterface in your daemon and declare function ```getServiceConfig()```
-	2) Defining your daemon config params:
-	* Easy way is to declare public variable, that you can change in controller daemons definition and return this variable in getServiceConfig();
 
-		Daemon code:
-		```
-		public $serviceConfig = [];
-		public function getServiceConfig()
-		    {
-		        return $this->serviceConfig;
-		    }
-		```
-		Yii2 console config file:
-		```php
-			'controllerMap' => [
-		        'service' => [
-		            'class' => '\consik\yii2daemons\service\ServiceController',
-					'daemons' => [
-						'testDaemon' => [
-							'class' => 'app\daemons\TestDaemon',
-							'serviceConfig' => [
-								'Service' => ['Type' => 'forking']
-							],
-						]
+Implement ServiceConfigInterface in your daemon and declare function ```getServiceConfig()```
+	
+Defining your daemon config params:
+	
+* Easy way is to declare public variable, that you can change in controller daemons definition and return this variable in getServiceConfig();
+
+	Daemon code:
+	```
+	public $serviceConfig = [];
+	public function getServiceConfig()
+	    {
+		return $this->serviceConfig;
+	    }
+	```
+	Yii2 console config file:
+	```php
+		...
+		'controllerMap' => [
+		'service' => [
+		    'class' => '\consik\yii2daemons\service\ServiceController',
+				'daemons' => [
+					'testDaemon' => [
+						'class' => 'app\daemons\TestDaemon',
+						'serviceConfig' => [
+							'Service' => ['Type' => 'forking']
+						],
 					]
 				]
 			]
-		```
+		]
+		...
+	```
 
-	* Or implement your own function getServiceConfig in the daemon that will returns config params
+* Or implement your own function getServiceConfig in the daemon that will returns config params
 
-		```php
-			public function getServiceConfig()
-			{
-				return [
-					'Service' => ['Type' => 'forking']
-				];
-			}
-		```
+	```php
+		public function getServiceConfig()
+		{
+			return [
+				'Service' => ['Type' => 'forking']
+			];
+		}
+	```
 2) Common services configuration. Override basic service configuration. Var ServiceController::$commonServiceConfig.
 
 	It can be changed in your controller configuration. Yii2 console config file:
 	```php
 		...
 		'controllerMap' => [
-	        'service' => [
-	            'class' => '\consik\yii2daemons\service\ServiceController',
-	            'commonServiceConfig' => [
-					'Service' => ['Type' => 'forking']
-				],
-	        ],
-	    ]
+			'service' => [
+			    'class' => '\consik\yii2daemons\service\ServiceController',
+			    'commonServiceConfig' => [
+						'Service' => ['Type' => 'forking']
+					],
+			],
+		]
 		...
 	```
 
