@@ -45,6 +45,7 @@ then
     esac
     systemctl daemon-reload
 else
+    echo -e "  ${green}[File doesn't exist. Creating...]${reset}\n"
     echo -e "$service_config" > $service_file
     systemctl enable $1
 fi
