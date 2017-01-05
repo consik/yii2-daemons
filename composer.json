@@ -1,0 +1,21 @@
+{
+  "name": "consik/yii2-daemons",
+  "description": "Yii2 extension for creating PHP daemons with systemd units",
+  "type": "yii2-extension",
+  "keywords": ["yii2", "daemon", "php", "component"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sergey Poltaranin (Consik)",
+      "email": "consigliere.kz@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "consik\\yii2daemons\\": ""
+    }
+  }
+}

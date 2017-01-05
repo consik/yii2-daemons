@@ -1,0 +1,58 @@
+#!/bin/bash
+
+red=$(tput setf 4)
+green=$(tput setf 2)
+reset=$(tput sgr0)
+
+service_file="/etc/systemd/system/"$1".service"
+service_config=$2
+service_config_check=$(echo -n "${service_config}" | grep -c "ExecStart=")
+systemd_check=$(systemd --version 2>/dev/null | grep -c "systemd")
+
+echo -n "Checking service file config..."
+if [ $service_config_check -eq 1 ];
+then
+    echo -e "  ${green}[OK]${reset}\n"
+else
+    echo -e "  ${red}[Check service config file. Can't find 'ExecStart' param]"
+    echo -e "Continue? (y/n)${reset}"
+    read to_continue
+    case "$to_continue" in
+        y|Y) ;;
+        *) exit 0
+    esac
+fi
+
+echo -n "Systemd installation check..."
+if [ $systemd_check -eq 1 ];
+then
+   echo -e "  ${green}[OK]${reset}\n"
+else
+   echo -e "  ${red}[Can't find 'systemd'. Verify that package is installed]${reset}\n"
+   exit 0;
+fi
+
+echo -n "Checking existing service file..."
+if [ -f $service_file ];
+then
+    echo -e "  ${red}[Service file currently exist]"
+    echo -e "Overwrite? (y/n)${reset}"
+    read to_write
+    case "$to_write" in
+        y|Y) echo -e "$service_config" > $service_file
+            ;;
+        *) exit 0
+    esac
+    systemctl daemon-reload
+else
+    echo -e "$service_config" > $service_file
+    systemctl enable $1
+fi
+
+echo -n "(Re)Start daemon? (y/n)"
+read to_start
+case "$to_start" in
+    y|Y) systemctl restart $1
+        ;;
+    *) exit 0
+esac
