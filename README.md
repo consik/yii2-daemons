@@ -196,7 +196,7 @@ See available options in [official docs](http://0pointer.de/public/systemd-man/s
 
 All of configuration sources below sorted by priority:
 
-1) Concrete daemon service configuration. Override common services configuration.
+#### Concrete daemon service configuration. Override common services configuration.
 
 It will be used if the daemon implements ServiceConfigInterface. ServiceController calls ```getServiceConfig()``` method for getting configuration.
 Example setting systemd unit params for each daemon
@@ -245,7 +245,7 @@ Defining your daemon config params:
 		}
 	```
 	
-2) Common services configuration. Override basic service configuration. Var ServiceController::$commonServiceConfig.
+#### Common services configuration. Override basic service configuration. Var ServiceController::$commonServiceConfig.
 
 	It can be changed in your controller configuration. Yii2 console config file:
 	```php
@@ -261,7 +261,7 @@ Defining your daemon config params:
 		...
 	```
 
-3) Basic service configuration. Lowest priority params. Returns by method ```ServiceController::getBasicServiceConfig(string $daemonName)```.
+#### Basic service configuration. Lowest priority params. Returns by method ```ServiceController::getBasicServiceConfig(string $daemonName)```.
 This method returns basic systemd unit configuration for all daemons(Service: ExecStart, Type; Unit: Description, After; Install: WantedBy).
 As default all generated services starts after mysql.service. Override param `After` in section `Unit` if you don't need it or if your daemon have other dependencies(mongodb.service for example).
 
