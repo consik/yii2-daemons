@@ -132,6 +132,49 @@ config\console.php:
 ```
 
 ### Generating systemd units.
+
+For generating systemd unit files use this command: ```php yii service/systemd-file DaemonName```
+
+
+### Registering service.
+ServiceController can only generate systemd unit(*.service) file by action systemd-file
+There is a bash script in package for fast registering systemd units in system.
+Using example, after service controller is configured:
+
+``` sudo bash vendor\consik\yii2-daemons\service\systemd.register ServiceName "$(php yii service/systemd-file DaemonName)" ```
+
+```Note: use ServiceName same as DaemonName if you don't want to be tangled.```
+
+### Controlling your daemon:
+
+Checking your daemon status:
+```sudo systemctl status ServiceName```
+
+Starting service:
+```sudo systemctl start ServiceName```
+
+Restarting service
+```sudo systemctl restart ServiceName```
+
+Stopping service:
+```sudo systemctl stop ServiceName```
+
+
+
+also you can use ServiceController methods like `status` and `stop`, but better use systemctl functions:
+
+Checking status by ServiceController:
+
+```sudo php yii service/status DaemonName```
+
+Stopping daemon by sending SIGTERM signal for daemon process:
+
+```sudo php yii service/stop DaemonName```
+
+@see ```man systemd``` for more information about unit files configuration and controlling your daemons.
+
+### Configuring systemd units
+
 There are three sources with params that used for generating systemd unit.
 Array structure for all sources below is:
 ```php
@@ -151,9 +194,9 @@ ParamName=ParamValue
 
 See available options in [official docs](http://0pointer.de/public/systemd-man/systemd.service.html)
 
-All of them below sorted by priority:
+All of configuration sources below sorted by priority:
 
-1) Daemons service configuration. Override common services configuration.
+1) Concrete daemon service configuration. Override common services configuration.
 
 It will be used if the daemon implements ServiceConfigInterface. ServiceController calls ```getServiceConfig()``` method for getting configuration.
 Example setting systemd unit params for each daemon
@@ -223,42 +266,3 @@ This method returns basic systemd unit configuration for all daemons(Service: Ex
 As default all generated services starts after mysql.service. Override param `After` in section `Unit` if you don't need it or if your daemon have other dependencies(mongodb.service for example).
 
 All of these configurations will be merged by array_replace_recursive() before generating each daemon config file;
-
-
-
-## Registering service.
-ServiceController can generate systemd unit(*.service) file by action systemd-file
-There is a bash script in package for fast registering systemd units in system.
-Using example, after service controller is configured:
-
-``` sudo bash vendor\consik\yii2-daemons\service\systemd.register ServiceName "$(php yii service/systemd-file DaemonName)" ```
-
-```Note: use ServiceName same as DaemonName if you don't want to be tangled.```
-
-### Controlling your daemon:
-
-Checking your daemon status:
-```sudo systemctl status ServiceName```
-
-Starting service:
-```sudo systemctl start ServiceName```
-
-Restarting service
-```sudo systemctl restart ServiceName```
-
-Stopping service:
-```sudo systemctl stop ServiceName```
-
-
-
-also you can use ServiceController methods like `status` and `stop`, but better use systemctl functions:
-
-Checking status by ServiceController:
-
-```sudo php yii service/status DaemonName```
-
-Stopping daemon by sending SIGTERM signal for daemon process:
-
-```sudo php yii service/stop DaemonName```
-
-@see ```man systemd``` for more information about unit files configuration and controlling your daemons.
