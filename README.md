@@ -211,9 +211,9 @@ Defining your daemon config params:
 	```
 	public $serviceConfig = [];
 	public function getServiceConfig()
-	    {
+	{
 		return $this->serviceConfig;
-	    }
+	}
 	```
 	Yii2 console config file:
 	```php
